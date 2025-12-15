@@ -1,0 +1,11 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+node-client/venv/
+node-client/__pycache__/
+node-client/**/__pycache__/
+node-client/**/*.pyc
+node-client/training_jobs/
+*.env
+

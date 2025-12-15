@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self';">
+    <title>AIForge Training Node</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🎓 AIForge Training Node</h1>
+                    <span class="version" id="app-version">v1.0.0</span>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot" id="status-dot"></div>
+                    <span id="status-text">Disconnected</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Configuration Panel -->
+            <section class="panel config-panel">
+                <h2>Training Node Configuration</h2>
+                <form id="config-form">
+                    <div class="form-group">
+                        <label for="node-name">Node Name</label>
+                        <input type="text" id="node-name" placeholder="My Training Node" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" rows="2" placeholder="Optional description"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="wallet-address-input">Wallet Address (Tron)</label>
+                        <input 
+                            type="text" 
+                            id="wallet-address-input" 
+                            placeholder="TYourTronWalletAddress..." 
+                            pattern="^T[A-Za-z1-9]{33}$"
+                            title="Tron address must start with T and be 34 characters"
+                        />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="coordinator-url">Coordinator URL</label>
+                        <input type="url" id="coordinator-url" value="https://aiforge-backend.fly.dev" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="max-jobs">Max Concurrent Training Jobs</label>
+                            <input type="number" id="max-jobs" min="1" max="3" value="1" required>
+                            <small>Training jobs are resource-intensive. Recommended: 1</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="gpu-enabled" checked>
+                                <span>GPU Enabled (Required for training)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="training-framework">Training Framework</label>
+                        <select id="training-framework">
+                            <option value="huggingface">HuggingFace Transformers</option>
+                            <option value="pytorch">PyTorch</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="storage-path">Storage Path for Datasets</label>
+                        <input type="text" id="storage-path" placeholder="C:\training_data" value="./training_data">
+                        <small>Directory where training datasets will be stored</small>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="start-btn">Start Training Node</button>
+                        <button type="button" class="btn btn-secondary" id="stop-btn" disabled>Stop Node</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- GPU/Resources Panel -->
+            <section class="panel gpu-panel">
+                <h2>GPU & Resources</h2>
+                <div id="gpu-status" class="gpu-status">
+                    <div class="status-item">
+                        <span class="status-label">GPU Status:</span>
+                        <span class="status-value" id="gpu-status-text">Checking...</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Total GPUs:</span>
+                        <span class="status-value" id="gpu-count">-</span>
+                    </div>
+                    <div id="gpu-list" class="gpu-list">
+                        <!-- GPU cards will be inserted here -->
+                    </div>
+                </div>
+                
+                <div class="resource-stats">
+                    <div class="stat-card">
+                        <div class="stat-label">CPU Usage</div>
+                        <div class="stat-value" id="cpu-usage">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Memory</div>
+                        <div class="stat-value" id="memory-usage">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Disk Space</div>
+                        <div class="stat-value" id="disk-usage">-</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Active Training Jobs Panel -->
+            <section class="panel jobs-panel">
+                <div class="panel-header">
+                    <h2>Active Training Jobs</h2>
+                    <button class="btn btn-small" id="refresh-jobs">Refresh</button>
+                </div>
+                <div id="active-jobs-list" class="jobs-list">
+                    <div class="empty-state">No active training jobs</div>
+                </div>
+            </section>
+
+            <!-- Training History Panel -->
+            <section class="panel history-panel">
+                <div class="panel-header">
+                    <h2>Training History</h2>
+                </div>
+                <div class="history-stats">
+                    <div class="stat-card">
+                        <div class="stat-label">Completed</div>
+                        <div class="stat-value" id="jobs-completed">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Failed</div>
+                        <div class="stat-value" id="jobs-failed">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Earnings</div>
+                        <div class="stat-value" id="earnings">0 USDT</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Logs Panel -->
+            <section class="panel logs-panel full-width">
+                <div class="panel-header">
+                    <h2>Training Logs</h2>
+                    <button class="btn btn-small" id="clear-logs">Clear</button>
+                </div>
+                <div class="logs-container" id="logs-container">
+                    <div class="log-entry">Waiting for training node to start...</div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <span>AIForge Network - Decentralized AI Training Platform</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
+
