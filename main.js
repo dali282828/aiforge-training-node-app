@@ -171,7 +171,7 @@ ipcMain.handle('start-node', async (event, config) => {
         ...process.env,
         PYTHONPATH: newPythonPath,
         PYTHONUNBUFFERED: '1',
-        COORDINATOR_URL: config.coordinatorUrl || 'https://aiforge-backend.fly.dev',
+        COORDINATOR_URL: config.coordinatorUrl || 'https://backend.infitask.com',
         NODE_NAME: config.nodeName || 'My Training Node',
         NODE_DESCRIPTION: config.description || '',
         GPU_ENABLED: config.gpuEnabled ? 'true' : 'false',

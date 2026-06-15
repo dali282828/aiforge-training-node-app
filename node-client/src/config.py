@@ -22,7 +22,7 @@ if _pydantic_available and BaseSettings:
     # Use pydantic if available
     class NodeConfig(BaseSettings):
         # Coordinator connection
-        COORDINATOR_URL: str = "https://aiforge-backend.fly.dev"
+        COORDINATOR_URL: str = "https://backend.infitask.com"
         NODE_TOKEN: Optional[str] = None
         
         # Node identification
@@ -65,7 +65,7 @@ else:
     class NodeConfig:
         def __init__(self):
             # Coordinator connection
-            self.COORDINATOR_URL = os.getenv("COORDINATOR_URL", "https://aiforge-backend.fly.dev")
+            self.COORDINATOR_URL = os.getenv("COORDINATOR_URL", "https://backend.infitask.com")
             self.NODE_TOKEN = os.getenv("NODE_TOKEN", None)
             
             # Node identification

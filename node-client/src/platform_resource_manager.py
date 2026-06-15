@@ -1,28 +1,29 @@
 """
 Platform Resource Manager
-Manages 5% resource allocation for platform services
+Manages 3.5% resource allocation for platform services (reduced from 5%)
+Phase 1: AI Security Robot - Split 5% into 1.5% Robot + 3.5% Platform
 """
 import psutil
 import os
 from typing import Dict, Any
 
 class PlatformResourceManager:
-    """Manages 5% resource allocation for platform"""
+    """Manages 3.5% resource allocation for platform (reduced from 5%)"""
     
     def __init__(self):
         self.cpu_limit = None
         self.memory_limit = None
-        self.allocation_percent = 0.05  # 5%
+        self.allocation_percent = 0.035  # 3.5% (reduced from 5%)
     
     def calculate_platform_resources(self) -> Dict[str, Any]:
-        """Calculate 5% of available resources"""
+        """Calculate 3.5% of available resources"""
         try:
             cpu_count = psutil.cpu_count(logical=True)
             memory = psutil.virtual_memory()
             
-            # Calculate 5% allocation
+            # Calculate 3.5% allocation
             platform_cpu = max(0.1, cpu_count * self.allocation_percent)  # Minimum 0.1 CPU
-            platform_memory = int(memory.total * self.allocation_percent)  # 5% of RAM
+            platform_memory = int(memory.total * self.allocation_percent)  # 3.5% of RAM
             
             return {
                 "cpu_cores": platform_cpu,
@@ -37,8 +38,8 @@ class PlatformResourceManager:
             print(f"Warning: Could not calculate platform resources: {e}", flush=True)
             return {
                 "cpu_cores": 0.1,
-                "memory_bytes": 512 * 1024 * 1024,  # 512 MB default
-                "memory_mb": 512,
+                "memory_bytes": 358 * 1024 * 1024,  # ~358 MB default (3.5% of 10GB)
+                "memory_mb": 358,
                 "allocation_percent": self.allocation_percent,
                 "cpu_count_total": 1,
                 "memory_total_mb": 1024

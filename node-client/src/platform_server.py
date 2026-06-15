@@ -20,7 +20,7 @@ class PlatformServer:
     
     def __init__(self, port: int = 8001, coordinator_url: Optional[str] = None):
         self.port = port
-        self.coordinator_url = coordinator_url or os.getenv("COORDINATOR_URL", "https://aiforge-backend.fly.dev")
+        self.coordinator_url = coordinator_url or os.getenv("COORDINATOR_URL", "https://backend.infitask.com")
         self.app = FastAPI(title="AIForge Platform Node", version="0.1.0")
         self.server_thread: Optional[threading.Thread] = None
         self.running = False

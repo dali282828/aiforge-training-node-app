@@ -60,7 +60,7 @@ The app requires:
 - Python 3.11+ installed
 - GPU recommended (training jobs are GPU-intensive)
 - Node client dependencies installed (in `node-client/`)
-- Coordinator URL (default: https://aiforge-backend.fly.dev)
+- Coordinator URL (default: https://backend.infitask.com)
 
 ## Usage
 
